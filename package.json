@@ -1,0 +1,29 @@
+{
+  "name": "vue-async-connect",
+  "version": "0.1.0",
+  "description": "基于vue3的全局异步通信",
+  "main": "lib/vue-async-connect.cjs.js",
+  "module": "lib/vue-async-connect.esm.js",
+  "scripts": {
+    "build": "rollup -c rollup.config.js"
+  },
+  "keywords": [
+    "vue3",
+    "asyncComponent"
+  ],
+  "author": "wenzheng",
+  "license": "MIT",
+  "brower": "dist/index.ts",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.0",
+    "rollup": "^2.68.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "vue": ">3.2.2"
+  },
+  "peerDependencies": {
+    "vue": ">3.2.2"
+  }
+}
