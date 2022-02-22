@@ -1,6 +1,6 @@
 {
   "name": "vue-async-connect",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "基于vue3的全局异步通信",
   "main": "lib/vue-async-connect.cjs.js",
   "module": "lib/vue-async-connect.esm.js",
