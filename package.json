@@ -1,17 +1,18 @@
 {
   "name": "vue-async-connect",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "global connects of async components base on vue3",
   "main": "lib/vue-async-connect.cjs.js",
   "module": "lib/vue-async-connect.esm.js",
   "scripts": {
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.js",
+    "release": "npm run build & npm publish"
   },
   "keywords": [
     "vue3",
     "asyncComponent"
   ],
-  "types": "src/index.d.ts",
+  "types": "index.ts",
   "author": "wenzheng",
   "license": "MIT",
   "devDependencies": {
