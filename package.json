@@ -1,7 +1,7 @@
 {
   "name": "vue-async-connect",
-  "version": "0.1.1",
-  "description": "基于vue3的全局异步通信",
+  "version": "1.0.0-alpha.0",
+  "description": "global connects of async components base on vue3",
   "main": "lib/vue-async-connect.cjs.js",
   "module": "lib/vue-async-connect.esm.js",
   "scripts": {
@@ -11,9 +11,9 @@
     "vue3",
     "asyncComponent"
   ],
+  "types": "src/index.d.ts",
   "author": "wenzheng",
   "license": "MIT",
-  "brower": "dist/index.ts",
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.3.0",
     "rollup": "^2.68.0",
