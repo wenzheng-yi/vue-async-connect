@@ -1,72 +1,73 @@
-import { ComponentPublicInstance, shallowRef, defineAsyncComponent, triggerRef, onMounted, defineComponent, h, watch, ref, Ref, effect, nextTick } from 'vue'
-import { CreateConnectOptions, ConnectInstance, DefineReceiveOptions } from './types'
-function createAsyncConnect<T>(options: CreateConnectOptions<T>)  {
+import { shallowRef, defineAsyncComponent, triggerRef, onMounted, defineComponent, h, watch, ref, nextTick } from 'vue'
+import { CreateConnectOptions, ConnectInstance, DefineReceiveOptions, ComponentInstance } from './types'
+function createAsyncConnect<T extends string>(options: CreateConnectOptions<T>) {
   const { components, maxCalls = 20 } = options
 
-  const allConnects: Array<ConnectInstance<T>> = ([])
-  const calledComponents = shallowRef(<ComponentPublicInstance[][]>[])
+  const allConnects = shallowRef(<ConnectInstance[]>[])
+  function asyncCall(name: T, triggerParam?: any, option?: Record<string, any>) {
+    const _option = option || null
 
-  function asyncCall(name: T, ...options: any) {
-    const calledIndex = allConnects.findIndex((e) => e.name === name)
-    if (calledIndex > -1) {
-      const freeComponent = allConnects[calledIndex].receivers.find((e) => !e.flag.value)
-      if (freeComponent) {
-        freeComponent.trigger(...options)
+    const freeComponent = allConnects.value.find(
+      (e: ConnectInstance) => e.name === name && e.receiver && !e.receiver.flag.value
+    )
+    if (freeComponent) {
+      if (_option) {
+        freeComponent.option = _option
+        triggerRef(allConnects)
+      }
+      if (Array.isArray(triggerParam)) {
+        freeComponent.receiver!.trigger(...triggerParam)
       } else {
-        allConnects[calledIndex].params.push(options)
-        calledComponents.value[calledIndex].push(defineAsyncComponent(components[name]))
-        triggerRef(calledComponents)
+        freeComponent.receiver!.trigger(triggerParam)
       }
       return
     }
 
-    const newConnect: ConnectInstance<T> = {
+    const component = {
       name,
-      params: [options],
-      receivers: []
-    }
-    allConnects.push(newConnect)
-    calledComponents.value.push([defineAsyncComponent(components[name])])
-    triggerRef(calledComponents)
-
+      params: triggerParam,
+      receiver: null,
+      option: _option,
+      component: defineAsyncComponent(components[name])
+    } as ConnectInstance
+    allConnects.value.push(component)
+    triggerRef(allConnects)
   }
 
   function defineReceive(options: DefineReceiveOptions<T>) {
     const { name, flag, trigger } = options
-    const connect = allConnects.find(e => e.name === name)
-    connect!.receivers.push({
+    const target = allConnects.value.find(
+      (e: ConnectInstance) => e.name === name && e.receiver === null
+    ) as ConnectInstance
+    target!.receiver = {
       flag,
       trigger
-    })
+    }
     onMounted(() => {
-      trigger(...connect!.params.shift())
+      trigger(target.params)
+      target.params = null
     })
   }
 
   const AsyncConnectRender = defineComponent({
     setup() {
       watch(() => {
-        return calledComponents.value.flat().length
+        return allConnects.value.length
       }, (cur, pre) => {
-        if(cur > maxCalls) {
-          let freeConnectIndex = allConnects.findIndex((connect) => {
-            return connect.receivers.every((comp) => !comp.flag.value)
-          })
-          if(freeConnectIndex > -1) {
-            allConnects.splice(freeConnectIndex, 1)
-            calledComponents.value.splice(freeConnectIndex, 1)
-            triggerRef(calledComponents)
-          }
+        if (cur > maxCalls) {
+          allConnects.value = allConnects.value.filter(
+            (e) => !e.receiver || e.receiver.flag.value
+          )
         }
       }, {
         flush: 'post'
       })
       return {
-        calledComponents
+        allConnects
       }
     },
     render() {
-      return this.calledComponents.flat().map(comp => h(comp))
+      return this.allConnects.map((comp) => h(comp.component, comp.option))
     }
   })
 
