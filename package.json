@@ -1,6 +1,6 @@
 {
   "name": "vue-async-connect",
-  "version": "1.0.0-alpha.2",
+  "version": "1.1.0-alpha.1",
   "description": "global connects of async components base on vue3",
   "main": "lib/vue-async-connect.cjs.js",
   "module": "lib/vue-async-connect.esm.js",
