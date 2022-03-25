@@ -1,12 +1,12 @@
-import { Ref, Component,RawProps } from "vue"
-export interface CreateConnectOptions<T> {
+import { Ref, Component } from "vue"
+export interface CreateConnectOptions<T extends string | number | symbol> {
   components: Record<T, () => Promise<any>>
   maxCalls?: number
 }
 export interface ConnectInstance {
   name: string
   params: any
-  option: RawProps
+  option: Record<string, any>
   receiver: {
     flag: Ref<boolean>
     trigger: Function
