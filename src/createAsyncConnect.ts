@@ -1,5 +1,5 @@
-import { shallowRef, defineAsyncComponent, triggerRef, onMounted, defineComponent, h, watch, ref, nextTick } from 'vue'
-import { CreateConnectOptions, ConnectInstance, DefineReceiveOptions, ComponentInstance } from './types'
+import { shallowRef, defineAsyncComponent, triggerRef, onMounted, defineComponent, h, watch } from 'vue'
+import { CreateConnectOptions, ConnectInstance, DefineReceiveOptions } from './types'
 function createAsyncConnect<T extends string>(options: CreateConnectOptions<T>) {
   const { components, maxCalls = 20 } = options
 
@@ -23,13 +23,13 @@ function createAsyncConnect<T extends string>(options: CreateConnectOptions<T>) 
       return
     }
 
-    const component = {
+    const component:ConnectInstance = {
       name,
       params: triggerParam,
       receiver: null,
       option: _option,
       component: defineAsyncComponent(components[name])
-    } as ConnectInstance
+    }
     allConnects.value.push(component)
     triggerRef(allConnects)
   }
@@ -67,7 +67,7 @@ function createAsyncConnect<T extends string>(options: CreateConnectOptions<T>) 
       }
     },
     render() {
-      return this.allConnects.map((comp) => h(comp.component, comp.option))
+      return this.allConnects.map((comp) => h(comp.component as any, comp.option, () => {}))
     }
   })
 

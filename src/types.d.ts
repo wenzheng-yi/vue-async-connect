@@ -6,7 +6,7 @@ export interface CreateConnectOptions<T extends string | number | symbol> {
 export interface ConnectInstance {
   name: string
   params: any
-  option: Record<string, any>
+  option: Record<string, any> | null
   receiver: {
     flag: Ref<boolean>
     trigger: Function
