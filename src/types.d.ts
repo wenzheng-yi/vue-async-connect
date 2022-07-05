@@ -2,6 +2,7 @@ import { Ref, Component } from "vue"
 export interface CreateConnectOptions<T extends string | number | symbol> {
   components: Record<T, () => Promise<any>>
   maxCalls?: number
+  onImportError?: (ev: Error) => void
 }
 export interface ConnectInstance {
   name: string
