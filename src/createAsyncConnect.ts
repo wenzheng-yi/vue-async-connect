@@ -87,7 +87,6 @@ function createAsyncConnect<T extends string>(
           return allConnects.value.length
         },
         (cur, pre) => {
-          console.log(cur)
           if (cur > maxCalls) {
             allConnects.value = allConnects.value.filter(
               (e) => !e.receiver || e.receiver.flag.value
